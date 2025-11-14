@@ -8,10 +8,10 @@ from ultralytics import YOLO
 # ------------------------
 MODEL_PATH = "models/research/object_detection/yolov8s_oiv7/yolov8s-oiv7.pt"
 VIDEO_PATH = "output1.mp4"
-OUTPUT_PATH = "output2_filtered_depth.mp4"
+OUTPUT_PATH = "output4_filtered_depth.mp4"
 
 # Process depth estimation every N frames for speed
-DEPTH_FRAME_SKIP = 5  # Process depth every 5 frames
+DEPTH_FRAME_SKIP = 20  # Process depth every 5 frames
 
 # ------------------------
 # CLASS FILTERING
@@ -19,7 +19,7 @@ DEPTH_FRAME_SKIP = 5  # Process depth every 5 frames
 ALLOWED = {
     'Person', 'Man', 'Woman', 'Girl', 'Boy',
     'Car', 'Bus', 'Truck', 'Motorcycle', 'Van', 'Bicycle', 'Land vehicle',
-    'Ambulance', 'Taxi', 'Vehicle registration plate',
+    'Ambulance', 'Taxi',
     'Traffic light', 'Traffic sign', 'Stop sign', 'Street light',
     'Fire hydrant', 'Parking meter',
     'Stairs', 'Door', 'Door handle', 'Building', 'House',
