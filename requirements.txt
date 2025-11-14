@@ -1,0 +1,10 @@
+opencv-python
+numpy
+pyttsx3
+pytesseract
+tensorflow
+torch
+torchvision
+pillow
+kagglehub
+ultralytics
