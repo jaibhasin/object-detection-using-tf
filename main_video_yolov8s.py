@@ -7,16 +7,11 @@ OUTPUT_PATH = "output_filtered.mp4"
 
 # Allowed objects
 ALLOWED = {
-    "Person",
-    "Human face",
-    "Human head",
-    "Car",
-    "Vehicle",
-    "Bus",
-    "Truck",
-    "Motorcycle",
-    "Vehicle registration plate",
-    "License plate",
+    'Person', 'Man', 'Woman', 'Girl', 'Boy',
+    'Car', 'Bus', 'Truck', 'Motorcycle', 'Van', 'Land vehicle',
+    'Bicycle',
+    'Vehicle registration plate',
+    'Traffic light', 'Traffic sign', 'Stop sign'
 }
 
 def main():
