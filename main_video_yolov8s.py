@@ -5,7 +5,7 @@ from ultralytics import YOLO
 MODEL_PATH = "models/research/object_detection/yolov8s_oiv7/yolov8s-oiv7.pt"
 
 # Path to your input video
-VIDEO_PATH = "input.mp4"   # <-- Change this to your video file
+VIDEO_PATH = "videoplayback.mp4"   # <-- Change this to your video file
 
 # Output video path
 OUTPUT_PATH = "output_yolo.mp4"

@@ -13,3 +13,6 @@ categories_places365.txt
 # YOLOv8 models
 models/research/object_detection/yolov8s_oiv7/
 *.pt
+
+# Video files
+*.mp4
