@@ -2,16 +2,39 @@ import cv2
 from ultralytics import YOLO
 
 MODEL_PATH = "models/research/object_detection/yolov8s_oiv7/yolov8s-oiv7.pt"
-VIDEO_PATH = "input.mp4"
+VIDEO_PATH = "videoplayback.mp4"
 OUTPUT_PATH = "output_filtered.mp4"
 
 # Allowed objects
 ALLOWED = {
+    # People
     'Person', 'Man', 'Woman', 'Girl', 'Boy',
-    'Car', 'Bus', 'Truck', 'Motorcycle', 'Van', 'Land vehicle',
-    'Bicycle',
-    'Vehicle registration plate',
-    'Traffic light', 'Traffic sign', 'Stop sign'
+    
+    # Vehicles
+    'Car', 'Bus', 'Truck', 'Motorcycle', 'Van', 'Bicycle', 'Land vehicle',
+    'Ambulance', 'Taxi',
+    
+    # Traffic & Navigation
+    'Traffic light', 'Traffic sign', 'Stop sign', 'Street light',
+    'Fire hydrant', 'Parking meter',
+    
+    # Critical Obstacles & Structures
+    'Stairs', 'Door', 'Door handle', 'Building', 'House',
+    'Chair', 'Table', 'Bench', 'Couch',
+    
+    # Indoor Navigation
+    'Toilet', 'Sink', 'Bed', 'Refrigerator', 'Oven', 'Microwave oven',
+    'Window', 'Bathtub', 'Shower',
+    
+    # Important Objects
+    'Handbag', 'Backpack', 'Suitcase', 'Luggage and bags',
+    'Mobile phone', 'Bottle', 'Mug', 'Cup',
+    
+    # Mobility & Safety
+    'Wheelchair', 'Crutch', 'Stretcher',
+    
+    # Outdoor Landmarks
+    'Tree', 'Fountain', 'Skyscraper'
 }
 
 def main():
