@@ -1,0 +1,11 @@
+# Downloaded model files
+object_detection/
+
+# Kagglehub model cache
+.kaggle/
+kagglehub/
+**/models--tensorflow--ssd-mobilenet-v2/
+
+# Places365 model and categories
+whole_resnet18_places365_python36.pth.tar
+categories_places365.txt
