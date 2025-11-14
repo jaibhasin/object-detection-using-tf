@@ -9,3 +9,7 @@ kagglehub/
 # Places365 model and categories
 whole_resnet18_places365_python36.pth.tar
 categories_places365.txt
+
+# YOLOv8 models
+models/research/object_detection/yolov8s_oiv7/
+*.pt
