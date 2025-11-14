@@ -3,7 +3,6 @@ import torch
 import numpy as np
 from ultralytics import YOLO
 from gtts import gTTS
-import pygame
 import tempfile
 import os
 # MoviePy imports (compatible with 2.x)
@@ -17,12 +16,12 @@ import time
 # MODEL PATHS
 # ------------------------
 MODEL_PATH = "models/research/object_detection/yolov8s_oiv7/yolov8s-oiv7.pt"
-VIDEO_PATH = "output1.mp4"
+VIDEO_PATH = "videoplayback.mp4"
 OUTPUT_PATH = "voice123_temp.mp4"
-OUTPUT_WITH_AUDIO = "voice123_final1.mp4"
+OUTPUT_WITH_AUDIO = "voice883_final.mp4"
 
 # Process depth estimation every N frames for speed
-DEPTH_FRAME_SKIP = 25
+DEPTH_FRAME_SKIP = 5
 
 # ------------------------
 # NAVIGATION ZONES
@@ -55,7 +54,7 @@ ALLOWED = PRIORITY_HIGH | PRIORITY_MEDIUM | PRIORITY_LOW
 # ------------------------
 # VOICE ALERT SETTINGS
 # ------------------------
-ALERT_COOLDOWN = 2.0
+ALERT_COOLDOWN = 3.0  # Seconds between alerts for same object type
 MIN_ALERT_DISTANCE = 150
 
 # ------------------------
@@ -73,7 +72,8 @@ midas_transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
 transform = midas_transforms.small_transform
 
 print("🔄 Initializing audio system...")
-pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
+# Don't initialize pygame mixer - we don't need it for recording
+# pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
 
 print("✅ All models loaded successfully!")
 
@@ -105,13 +105,13 @@ class VoiceAlert:
         return True
     
     def speak_and_record(self, message, frame_number):
-        """Generate speech using gTTS and play it"""
+        """Generate speech using gTTS (don't play it during processing)"""
         if self.speaking:
             return
             
         self.speaking = True
         try:
-            # Generate speech using Google TTS (better quality)
+            # Generate speech using Google TTS
             audio_file = os.path.join(self.temp_dir, f"alert_{frame_number}.mp3")
             tts = gTTS(text=message, lang='en', slow=False)
             tts.save(audio_file)
@@ -120,12 +120,10 @@ class VoiceAlert:
             timestamp = frame_number / self.fps
             self.audio_clips.append((timestamp, audio_file))
             
-            # Play the audio
-            pygame.mixer.music.load(audio_file)
-            pygame.mixer.music.set_volume(1.0)
-            pygame.mixer.music.play()
-            
             print(f"🔊 ALERT at {timestamp:.2f}s: {message}")
+            
+            # DON'T play audio during processing - just record it
+            # This speeds up video processing significantly
             
         except Exception as e:
             print(f"TTS Error: {e}")
@@ -398,8 +396,12 @@ def main():
             )
             
             for obj in center_zone_objects[:1]:
+                # Check distance threshold here before alerting
+                if obj['depth'] < MIN_ALERT_DISTANCE:
+                    continue
+                    
                 alert_msg = generate_voice_alert(obj['label'], obj['distance'], obj['zone'])
-                if alert_msg and voice_alert.should_alert(obj['label'], obj['depth']):
+                if alert_msg and voice_alert.should_alert(obj['label'], frame_count):
                     voice_alert.speak_and_record(alert_msg, frame_count)
 
         info_text = f"Frame: {frame_count}"
