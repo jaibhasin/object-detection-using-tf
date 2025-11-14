@@ -8,7 +8,10 @@ from ultralytics import YOLO
 # ------------------------
 MODEL_PATH = "models/research/object_detection/yolov8s_oiv7/yolov8s-oiv7.pt"
 VIDEO_PATH = "output1.mp4"
-OUTPUT_PATH = "output1_filtered_depth.mp4"
+OUTPUT_PATH = "output2_filtered_depth.mp4"
+
+# Process depth estimation every N frames for speed
+DEPTH_FRAME_SKIP = 5  # Process depth every 5 frames
 
 # ------------------------
 # CLASS FILTERING
@@ -96,12 +99,13 @@ def get_box_depth(depth_map, x1, y1, x2, y2):
 def get_distance_label(depth_value):
     """
     Convert depth value to human-readable distance.
+    MiDaS outputs inverse depth - after normalization, HIGHER values = CLOSER
     """
-    if depth_value < 85:
+    if depth_value > 170:
         return "VERY CLOSE", (0, 0, 255)  # Red
-    elif depth_value < 128:
+    elif depth_value > 128:
         return "CLOSE", (0, 165, 255)  # Orange
-    elif depth_value < 170:
+    elif depth_value > 85:
         return "MEDIUM", (0, 255, 255)  # Yellow
     else:
         return "FAR", (0, 255, 0)  # Green
@@ -127,7 +131,9 @@ def main():
     )
 
     print("🎥 Processing video with YOLO + MiDaS depth estimation...")
+    print(f"⚡ Processing depth every {DEPTH_FRAME_SKIP} frames for speed")
     frame_count = 0
+    depth_map = None  # Cache depth map
 
     while True:
         ret, frame = cap.read()
@@ -136,8 +142,9 @@ def main():
 
         frame_count += 1
         
-        # Estimate depth map
-        depth_map = estimate_depth(frame)
+        # Estimate depth map only every N frames
+        if frame_count % DEPTH_FRAME_SKIP == 1 or depth_map is None:
+            depth_map = estimate_depth(frame)
         
         # Run YOLO detection
         results = yolo(frame, verbose=False)[0]
@@ -204,8 +211,8 @@ def main():
 
         # Optional: Print navigation info for closest objects
         if detected_objects:
-            # Sort by depth (closest first)
-            detected_objects.sort(key=lambda x: x['depth'])
+            # Sort by depth (HIGHEST values = closest now)
+            detected_objects.sort(key=lambda x: x['depth'], reverse=True)
             
             # Print top 3 closest objects
             if frame_count % 30 == 0:  # Print every 30 frames
