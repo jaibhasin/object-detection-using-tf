@@ -2,7 +2,7 @@ import cv2
 from ultralytics import YOLO
 
 MODEL_PATH = "models/research/object_detection/yolov8s_oiv7/yolov8s-oiv7.pt"
-VIDEO_PATH = "videoplayback.mp4"
+VIDEO_PATH = "v2.mp4"
 OUTPUT_PATH = "output_filtered.mp4"
 
 # Allowed objects
@@ -12,7 +12,7 @@ ALLOWED = {
     
     # Vehicles
     'Car', 'Bus', 'Truck', 'Motorcycle', 'Van', 'Bicycle', 'Land vehicle',
-    'Ambulance', 'Taxi',
+    'Ambulance', 'Taxi', 'Vehicle registration plate'
     
     # Traffic & Navigation
     'Traffic light', 'Traffic sign', 'Stop sign', 'Street light',
